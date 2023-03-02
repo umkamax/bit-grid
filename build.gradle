@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.6.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+def compatibilityVersion = 15
+targetCompatibility = compatibilityVersion
+sourceCompatibility = compatibilityVersion
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    postgresqlJdbcVersion = '42.3.1'
+    flywayVersion = '8.3.0'
+}
+
+// Feel free to add new dependencies in the section below
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    implementation "org.postgresql:postgresql:$postgresqlJdbcVersion"
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation "org.flywaydb:flyway-core:$flywayVersion"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+wrapper {
+    gradleVersion = '7.3.3'
+}
