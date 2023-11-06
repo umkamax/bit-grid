@@ -1,0 +1,95 @@
+openapi: 3.0.3
+info:
+  title: Bit Grid API
+  description: Bit Grid API
+  version: 0.1.0
+  contact:
+    name: API Support
+    email: "umka.max@gmail.com"
+servers:
+  - url: http://localhost:8080
+    description: Local API server
+tags:
+  - name: Grid
+  - name: Column
+  - name: Cell
+paths:
+  /grid:
+    get:
+      tags:
+        - Grid
+      summary: Добавление продуктового предложения в корзину
+      operationId: getAll
+      responses:
+        '200':
+          description: Создан
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ErrorInfo'
+    post:
+      tags:
+        - Grid
+      summary: Добавление продуктового предложения в корзину
+      operationId: create
+      responses:
+        '200':
+          description: Создан
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ErrorInfo'
+  /grid/cell:
+    post:
+      tags:
+        - Cell
+      summary: Получение корзины клиента
+      operationId: set
+      parameters:
+        - in: path
+          name: columnId
+          description: Grid column identifier
+          schema:
+            type: number
+          required: true
+        - in: path
+          name: rowId
+          description: Grid column identifier
+          schema:
+            type: number
+          required: true
+      responses:
+        '204':
+          description: Список корзин клиента (возможен пустой)
+          content:
+            application/json;charset=utf-8:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShoppingCart'
+components:
+  schemas:
+    ErrorInfo:
+      type: object
+      description: Сообщение об ошибке
+      properties:
+        code:
+          type: string
+          description: Код ошибки
+        status:
+          type: string
+          description: Статус ошибки
+        message:
+          type: string
+          description: Описание ошибки
+        details:
+          type: string
+          description: Детальное описание ошибки
+        timestamp:
+          type: string
+          format: date-time
+          description: Дата и время ответа возникновения ошибки
+        traceId:
+          type: string
+          format: uuid
+          description: Идентификатор трассировки

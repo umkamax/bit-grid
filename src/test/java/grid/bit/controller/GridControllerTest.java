@@ -2,7 +2,6 @@ package grid.bit.controller;
 
 import grid.bit.AbstractIntegrationTest;
 import grid.bit.model.Grid;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,7 +22,6 @@ public class GridControllerTest extends AbstractIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Disabled // ToDo: enable
     @Test
     public void getAll_returnsCollectionOfGrids() throws Exception {
         mockMvc.perform(get(BASE_URL))
@@ -32,7 +30,6 @@ public class GridControllerTest extends AbstractIntegrationTest {
                 .andExpect(content().json("[{id: 55500055510, name: 'A', cellSize: 5}, {id: 55500055520, name: 'B', cellSize: 10}]", true));
     }
 
-    @Disabled // ToDo: enable
     @Test
     public void create_storesNewGrid() throws Exception {
         mockMvc.perform(post(BASE_URL).contentType(APPLICATION_JSON).accept(APPLICATION_JSON)
@@ -49,7 +46,6 @@ public class GridControllerTest extends AbstractIntegrationTest {
         assertThat(grid.getRows()).hasSize(1);
     }
 
-    @Disabled // ToDo: enable
     @Test
     public void create_invalidName_rejects() throws Exception {
         mockMvc.perform(post(BASE_URL).contentType(APPLICATION_JSON).accept(APPLICATION_JSON)
@@ -59,9 +55,9 @@ public class GridControllerTest extends AbstractIntegrationTest {
                 .andExpect(content().string(containsString("name")));
     }
 
-    @Disabled // ToDo: enable
     @Test
     public void update_changesGridName() throws Exception {
+        // TODO why not PATCH???
         mockMvc.perform(put(BASE_URL + "/{id}", 55500055510L).contentType(APPLICATION_JSON)
                         .content("{\"name\": \"Bar\"}"))
                 .andExpect(status().isNoContent());
@@ -72,7 +68,6 @@ public class GridControllerTest extends AbstractIntegrationTest {
         assertThat(grid.getId()).isEqualTo(55500055510L);
     }
 
-    @Disabled // ToDo: enable
     @Test
     public void delete_removesGridAndItsData() throws Exception {
         mockMvc.perform(delete(BASE_URL + "/{id}", 55500055510L))

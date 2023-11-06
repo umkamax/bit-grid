@@ -1,9 +1,12 @@
 spring:
   jpa:
     database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
 
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5433/grid_test_db
+    url: jdbc:postgresql://127.0.0.1:5432/grid_test_db
     username: postgres
     password: postgres
 

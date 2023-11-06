@@ -1,6 +1,7 @@
 package grid.bit.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -8,8 +9,8 @@ import java.util.List;
 public class Grid extends AbstractEntity<Long> {
     private String name;
     private int cellSize;
-    private List<GridColumn> columns;
-    private List<GridRow> rows;
+    private List<GridColumn> columns = new ArrayList<>();
+    private List<GridRow> rows = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -28,8 +29,8 @@ public class Grid extends AbstractEntity<Long> {
         this.cellSize = cellSize;
     }
 
-    @OrderBy("number")
-    @OneToMany(mappedBy = "grid")
+    @OrderBy("number") // ???
+    @OneToMany(mappedBy = "grid", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<GridColumn> getColumns() {
         return columns;
     }
@@ -38,13 +39,23 @@ public class Grid extends AbstractEntity<Long> {
         this.columns = columns;
     }
 
-    @OrderBy("number")
-    @OneToMany(mappedBy = "grid")
+    @OrderBy("number") // ???
+    @OneToMany(mappedBy = "grid", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<GridRow> getRows() {
         return rows;
     }
 
     public void setRows(List<GridRow> rows) {
         this.rows = rows;
+    }
+
+    public void addColumn(GridColumn column) {
+        columns.add(column);
+        column.setGrid(this);
+    }
+
+    public void addRow(GridRow row) {
+        rows.add(row);
+        row.setGrid(this);
     }
 }
