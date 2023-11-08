@@ -26,7 +26,6 @@ public class GridColumnControllerTest extends AbstractIntegrationTest {
     @Test
     public void insert_addsNewColumnToGrid() throws Exception {
         mockMvc.perform(post(BASE_URL).param("afterColumnId", "5550005551201").accept(APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
                 .andExpect(content().json("{id: 5550005552001}"));

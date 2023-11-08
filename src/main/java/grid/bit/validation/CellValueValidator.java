@@ -32,7 +32,6 @@ public class CellValueValidator implements ConstraintValidator<ValidCellValue, G
         return checkCellValueFormat(cell);
     }
 
-    // TODO validate bit string @Pattern
     private boolean checkCellValueFormat(GridCell gridCell) {
         int cellSize = gridCell.getGridColumn().getGrid().getCellSize();
         String cellValue = gridCell.getValue();

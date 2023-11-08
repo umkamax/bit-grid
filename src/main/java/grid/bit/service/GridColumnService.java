@@ -6,6 +6,8 @@ import grid.bit.model.GridCell;
 import grid.bit.model.GridColumn;
 import grid.bit.model.GridRow;
 import grid.bit.repository.GridColumnRepository;
+import grid.bit.service.lcp.LCPCalculatorFactory;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static grid.bit.service.lcp.LCPAlgorithm.POSTGRES;
+
 @Service
 @Transactional
 public class GridColumnService {
@@ -21,9 +25,14 @@ public class GridColumnService {
     private static final int NUMBER_STEP = 1;
 
     private final GridColumnRepository gridColumnRepository;
+    private final LCPCalculatorFactory lcpCalculatorFactory;
 
-    public GridColumnService(GridColumnRepository gridColumnRepository) {
+    public GridColumnService(
+            GridColumnRepository gridColumnRepository,
+            LCPCalculatorFactory lcpCalculatorFactory
+    ) {
         this.gridColumnRepository = gridColumnRepository;
+        this.lcpCalculatorFactory = lcpCalculatorFactory;
     }
 
     public GridColumn insert(Long afterColumnId) {
@@ -53,8 +62,8 @@ public class GridColumnService {
          * */
         for(int i = targetColumnIndex; i < columns.size(); i++) {
             GridColumn current = columns.get(i);
-            //TODO int overflow
-            current.setNumber(current.getNumber() + NUMBER_STEP);
+            //TODO handle int overflow and throw IllegalStateException()
+            current.setNumber(Math.addExact(current.getNumber(), NUMBER_STEP));
         }
 
         return columns;
@@ -94,7 +103,13 @@ public class GridColumnService {
 
     @Transactional(readOnly = true)
     public String getCommonPrefix(Long id) {
-        return "";
+        var calculator = lcpCalculatorFactory.getLCPCalculator(POSTGRES);
+
+        var column = gridColumnRepository.findById(id)
+                .orElseThrow(() -> getEntityNotFoundException(id));
+
+        // TODO move it into GridCellService for calculate upon saving (trigger/events)
+        return calculator.calculate(column);
     }
 
     @Transactional(readOnly = true)

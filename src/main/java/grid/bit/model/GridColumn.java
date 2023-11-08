@@ -11,6 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class GridColumn extends AbstractEntity<Long> {
     private int number;
+    private String lcp;
     private Grid grid;
     private Set<GridCell> cells;
 

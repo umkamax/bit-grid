@@ -8,7 +8,7 @@ CREATE TABLE grid_column (
     id BIGSERIAL PRIMARY KEY,
     number INT NOT NULL CHECK (number > 0),
     grid_id BIGINT NOT NULL REFERENCES grid,
-    UNIQUE (grid_id, number) DEFERRABLE INITIALLY DEFERRED
+    UNIQUE (grid_id, number)
 );
 
 CREATE TABLE grid_row (

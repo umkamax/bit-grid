@@ -1,5 +1,6 @@
 package grid.bit.exception;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -7,26 +8,30 @@ import java.util.List;
 
 @Getter
 public class ErrorInfo {
-    private final HttpStatus status;
+    @JsonProperty("code")
+    private final int httpStatus;
+    @JsonProperty("status")
+    private final String reasonPhrase;
     private final String message;
-    private final List<String> errors;
+    private final List<String> details;
 
     public ErrorInfo(HttpStatus status, String message) {
         this(status, message, List.of());
+
     }
 
-    public ErrorInfo(HttpStatus status, String message, List<String> errors) {
-        super();
-        this.status = status;
+    public ErrorInfo(HttpStatus status, String message, List<String> details) {
+        this.httpStatus = status.value();
+        this.reasonPhrase = status.getReasonPhrase();
         this.message = message;
-        this.errors = errors;
+        this.details = details;
     }
 
     public ErrorInfo(HttpStatus status, String message, String error) {
-        super();
-        this.status = status;
+        this.httpStatus = status.value();
+        this.reasonPhrase = status.getReasonPhrase();
         this.message = message;
-        this.errors = List.of(error);
+        this.details = List.of(error);
     }
 
 }

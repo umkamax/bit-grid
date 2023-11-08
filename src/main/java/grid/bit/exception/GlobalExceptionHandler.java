@@ -28,12 +28,7 @@ public class GlobalExceptionHandler {
         this.messageSourceAccessor = messageSourceAccessor;
     }
 
-    // TODO remove it
-    @ExceptionHandler(Exception.class)
-    ErrorInfo handleException(Exception ex) {
-        return null;
-    }
-
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class)
     ErrorInfo handleRuntimeException(RuntimeException ex) {
         return new ErrorInfo(INTERNAL_SERVER_ERROR, ex.getLocalizedMessage());

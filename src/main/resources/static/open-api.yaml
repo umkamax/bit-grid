@@ -18,78 +18,144 @@ paths:
     get:
       tags:
         - Grid
-      summary: Добавление продуктового предложения в корзину
+      summary: A list of grids
       operationId: getAll
       responses:
-        '200':
-          description: Создан
+        200:
+          description:
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/ErrorInfo'
+                $ref: '#/components/schemas/GridSummary'
     post:
       tags:
         - Grid
-      summary: Добавление продуктового предложения в корзину
+      summary:
       operationId: create
       responses:
-        '200':
-          description: Создан
+        201:
+          description: Grid created
           content:
             application/json;charset=utf-8:
               schema:
-                $ref: '#/components/schemas/ErrorInfo'
-  /grid/cell:
+                $ref: '#/components/schemas/GridDTO'
+  /grid/column/{id}/common-prefix:
+    get:
+      tags:
+        - Column
+      summary: A longest common prefix of given column
+      operationId: getCommonPrefix
+      parameters:
+        - in: path
+          name: id
+          description: Grid column identifier
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        200:
+          description:
+          content:
+            application/json;charset=utf-8:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorInfo'
+  /grid/column/{columnId}:
     post:
       tags:
-        - Cell
-      summary: Получение корзины клиента
-      operationId: set
+        - Column
+      summary:
+      operationId: insert
       parameters:
         - in: path
           name: columnId
           description: Grid column identifier
           schema:
-            type: number
-          required: true
-        - in: path
-          name: rowId
-          description: Grid column identifier
-          schema:
-            type: number
+            type: integer
+            format: int64
           required: true
       responses:
-        '204':
+        201:
           description: Список корзин клиента (возможен пустой)
           content:
             application/json;charset=utf-8:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ShoppingCart'
+                  $ref: '#/components/schemas/ErrorInfo'
+  /grid/cell/{columnId}/{rowId}:
+    post:
+      tags:
+        - Cell
+      summary:
+      operationId: set
+      parameters:
+        - in: path
+          name: columnId
+          description: Grid column identifier
+          schema:
+            type: integer
+            format: int64
+          required: true
+        - in: path
+          name: rowId
+          description: Grid column identifier
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        204:
+          description:
+          content:
+            application/json;charset=utf-8:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorInfo'
 components:
   schemas:
     ErrorInfo:
       type: object
-      description: Сообщение об ошибке
+      description: Error info
       properties:
         code:
-          type: string
+          type: number
           description: Код ошибки
         status:
           type: string
           description: Статус ошибки
         message:
           type: string
-          description: Описание ошибки
+          description: Error message
         details:
           type: string
           description: Детальное описание ошибки
-        timestamp:
+    GridSummary:
+      type: object
+      description: Grid data
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
           type: string
-          format: date-time
-          description: Дата и время ответа возникновения ошибки
-        traceId:
+        cellSize:
+          type: integer
+          format: int32
+    GridDTO:
+      type: object
+      description: Grid data
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
           type: string
-          format: uuid
-          description: Идентификатор трассировки
+        cellSize:
+          type: integer
+          format: int32
